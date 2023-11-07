@@ -40,13 +40,14 @@ gitment:
 active: 技术
 
 # 首页除了最新文章外显示分类
-cates: 
+cates:
+  - 运维
   - Kubernetes
 
 # 中文本地化
 locals:
-  tags: 标签前
-  about: 关于鱼鱼
-  newest: 最新文章呀
+  tags: 标签
+  about: 关于
+  newest: 最新文章
 plugins:
 - jekyll-paginate
