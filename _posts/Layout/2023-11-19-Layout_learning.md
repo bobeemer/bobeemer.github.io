@@ -1,4 +1,65 @@
----
+
+# Table of Contents
+
+1.  [操作系统](#orgfeb9986)
+    1.  [windows](#orgeb240d6)
+        1.  [端口](#orgaf60f5b)
+    2.  [linux](#orgb431d7d)
+        1.  [linux的locale设置](#org8e09a7e)
+        2.  [windows和linux之间的编码转换问题](#org51a0bef)
+2.  [中间件](#orgf6067f0)
+    1.  [jdk](#orgd41fd4d)
+        1.  [环境变量设置](#org0d3ba09)
+    2.  [tomcat](#org175cd1a)
+        1.  [端口](#org91bdabc)
+        2.  [内存参数](#org6db98b6)
+        3.  [日志($TOMCAT/logs)](#org738f382)
+        4.  [访问控制](#orgf28d931)
+        5.  [入侵防护](#org3b9f39d)
+    3.  [mysql](#org8424434)
+        1.  [启动进程](#org32cd1e5)
+        2.  [启动原理](#orgecd2cbd)
+        3.  [配置文件](#org3010c54)
+        4.  [参数详解](#org57c8e6e)
+        5.  [mariadb简明安装](#orga0eb3b7)
+        6.  [数据库定时备份](#orgb1557a3)
+        7.  [Mairadb开启SSL登录并配置证书](#org8355d38)
+        8.  [生成服务端和客户端的证书](#org7e71fe2)
+        9.  [将证书路径配置到配置文件并重启服务](#orgb20f99d)
+        10. [客户端使用证书连接或](#org0185995)
+        11. [sql查询练习题](#org33a8162)
+    4.  [nginx](#org3bd0ce3)
+        1.  [nginx的访问部分资源：503 Service Temporarily Unavailable：](#org6dbeb8a)
+    5.  [docker](#orgc3ac75d)
+        1.  [镜像分片](#orgd89ab08)
+    6.  [nfs](#org99e1028)
+        1.  [简介](#org48ab5a2)
+        2.  [工作流程](#org136ec42)
+        3.  [依赖下载](#org034f0c6)
+        4.  [NFS配置](#org4af5945)
+3.  [实用命令](#orga5d8ea4)
+    1.  [md5sum](#orgad91c99)
+        1.  [简介](#orgffb9486)
+        2.  [命令选项](#orgb987a5b)
+        3.  [生成校检码](#orge7d562a)
+        4.  [校检](#orgc173d84)
+        5.  [总结](#orga3c1274)
+4.  [其他经验](#org9e20295)
+    1.  [编辑yml配置文件时，记得不要用打tab，而是用空格键，否则会因为格式问题产生配置格式读取错误，要确保信息正确，格式正确](#org3fbc8d1)
+    2.  [博微新配置文件的加解密（需要安装JDK和weakPassword-0.0.1.jar）](#org4357f87)
+        1.  [对明文进行加密(执行会得到密文内容)](#orgad282a2)
+        2.  [添加"-d"选项对密文解密(生成解密内容)，添加">"指定明文输出到的文件(不加打印到终端)](#orgcd5821b)
+    3.  [文件解压缩的规范注意](#org2a0aa9c)
+        1.  [问题：在centos解压文件： tar -xvf mysql-5.7.27-aarch64.tar.gz -C *usr/local*](#orgbd6e5df)
+        2.  [解决办法：](#orga24d56a)
+    4.  [Navicat运行sql文件时需要双击数据库将信息项给展开，否则“运行sql文件”是灰色的。](#orgd9d0b4a)
+    5.  [Linux更换jar包calss文件：](#orgacfddf9)
+        1.  [要替换的文件在jar包的二级及以下目录下，则需要以下步骤(比如说要将：gzdwpg-biz-1.0.0.jar包中的ProjectBatchCreateServiceImpl.class替换新的class文件)：](#org30c0666)
+        2.  [jar命令参数学习：https://www.cnblogs.com/liyanbin/p/6088458.html](#org1841a93)
+    6.  [DOP文件预览服务：](#org3c551b6)
+    7.  [字体问题：](#org19b0d4d)
+
+&#x2014;
 
 layout: post
 title: 运维工作笔记
@@ -6,82 +67,20 @@ category: 技术
 tags: 运维
 keywords: 运维
 
----
-
-# Table of Contents
-
-1.  [操作系统](#org78e6f10)
-    1.  [windows](#org7c8c6eb)
-        1.  [端口](#org517dd7e)
-    2.  [linux](#org5b050a3)
-        1.  [linux的locale设置](#orga7bb235)
-        2.  [windows和linux之间的编码转换问题](#org19cd7a3)
-2.  [中间件](#orgc64d26b)
-    1.  [jdk](#orgbf5efc8)
-        1.  [环境变量设置](#org1449c6f)
-    2.  [tomcat](#org3e02e4c)
-        1.  [端口](#org46fdfca)
-        2.  [内存参数](#org5345289)
-        3.  [日志($TOMCAT/logs)](#org29b6ef0)
-        4.  [访问控制](#org7740d2b)
-        5.  [入侵防护](#orge7b0571)
-    3.  [mysql](#orgfd18c62)
-        1.  [启动进程](#org17ed139)
-        2.  [启动原理](#org5db31bc)
-        3.  [配置文件](#orgd34b977)
-        4.  [参数详解](#org4670966)
-        5.  [mariadb简明安装](#orgceeb351)
-        6.  [数据库定时备份](#orgff535e0)
-        7.  [Mairadb开启SSL登录并配置证书](#org47092aa)
-        8.  [生成服务端和客户端的证书](#org9b89520)
-        9.  [将证书路径配置到配置文件并重启服务](#orgab3e111)
-        10. [客户端使用证书连接或](#orgb8ee75b)
-        11. [sql查询练习题](#orgc7e2e87)
-    4.  [nginx](#orgebfbee0)
-        1.  [nginx的访问部分资源：503 Service Temporarily Unavailable：](#org929a1bd)
-    5.  [docker](#orgecef557)
-        1.  [镜像分片](#orgc442f7e)
-    6.  [nfs](#orgca46a3c)
-        1.  [简介](#org663debe)
-        2.  [工作流程](#org002afff)
-        3.  [依赖下载](#orgeea6978)
-        4.  [NFS配置](#org594a9cd)
-3.  [实用命令](#orge248c3f)
-    1.  [md5sum](#org86dcd5c)
-        1.  [简介](#org206d9b0)
-        2.  [命令选项](#org42efc0a)
-        3.  [生成校检码](#orgb9afe13)
-        4.  [校检](#org4944460)
-        5.  [总结](#org5132cd7)
-4.  [其他经验](#org46579d2)
-    1.  [编辑yml配置文件时，记得不要用打tab，而是用空格键，否则会因为格式问题产生配置格式读取错误，要确保信息正确，格式正确](#orgff829f7)
-    2.  [博微新配置文件的加解密（需要安装JDK和weakPassword-0.0.1.jar）](#orgf2ed7fa)
-        1.  [对明文进行加密(执行会得到密文内容)](#org6b199e6)
-        2.  [添加"-d"选项对密文解密(生成解密内容)，添加">"指定明文输出到的文件(不加打印到终端)](#orge6b9ddc)
-    3.  [文件解压缩的规范注意](#org1c0b636)
-        1.  [问题：在centos解压文件： tar -xvf mysql-5.7.27-aarch64.tar.gz -C *usr/local*](#orga996139)
-        2.  [解决办法：](#org38cca04)
-    4.  [Navicat运行sql文件时需要双击数据库将信息项给展开，否则“运行sql文件”是灰色的。](#orgf056b20)
-    5.  [Linux更换jar包calss文件：](#orgfd73c91)
-        1.  [要替换的文件在jar包的二级及以下目录下，则需要以下步骤(比如说要将：gzdwpg-biz-1.0.0.jar包中的ProjectBatchCreateServiceImpl.class替换新的class文件)：](#orge9c83b4)
-        2.  [jar命令参数学习：https://www.cnblogs.com/liyanbin/p/6088458.html](#orgf539c0b)
-    6.  [DOP文件预览服务：](#org6e616fd)
-    7.  [字体问题：](#org5ecd3ea)
-
-\#+DATA：2023/7/29
+&#x2014;
 
 
-<a id="org78e6f10"></a>
+<a id="orgfeb9986"></a>
 
 # 操作系统
 
 
-<a id="org7c8c6eb"></a>
+<a id="orgeb240d6"></a>
 
 ## windows
 
 
-<a id="org517dd7e"></a>
+<a id="orgaf60f5b"></a>
 
 ### 端口
 
@@ -90,39 +89,37 @@ keywords: 运维
     netstat -ano
     netstat -aon|findstr "8081
 
-2.  找到端口对应的PID（最后一栏）
+2.  找到端口对应PID（最后一栏）
 
-3.  根据PID查找对应的进程
+3.  根据PID查找进程
 
-    tasklist|findstr "9088"
+        tasklist|findstr "9088"  
 
 4.  结束进程
 
-    (强制（/F参数）杀死 pid 为 9088 的所有进程包括子进程（/T参数）)
-    taskkill /T /F /PID 9088
+        # (强制（/F参数）杀死 pid 为 9088 的所有进程包括子进程（/T参数）)
+        taskkill /T /F /PID 9088  
 
-5.  windos系统常用端口辨析
+5.  端口启用和禁用：
 
-6.  端口启用和禁用：
+    windows防火墙->高级设置->出站规则->端口->允许连接和禁用对应开启和关闭
 
-    windows防火墙-》高级设置-》出站规则-》端口-》（允许连接和禁用对应开启和关闭端
+6.  windos系统常用端口辨析
 
-7.  135、137、138、139和445端口，这几个端口都是与文件共享和打印机共享有关的端口，
-
-    445端口是局域网文件共享及打印机共享端口(易遭永恒之蓝的病毒入侵), 在这几个端口上经常爆发很严重的漏洞。
+    1.  135、137、138、139和445端口，这几个端口都是与文件共享和打印机共享有关的端口，445端口是局域网文件共享及打印机共享端口(易遭永恒之蓝的病毒入侵), 在这几个端口上经常爆发很严重的漏洞。
 
 
-<a id="org5b050a3"></a>
+<a id="orgb431d7d"></a>
 
-## TODO linux
-
-
-<a id="orga7bb235"></a>
-
-### TODO linux的locale设置
+## linux
 
 
-<a id="org19cd7a3"></a>
+<a id="org8e09a7e"></a>
+
+### linux的locale设置
+
+
+<a id="org51a0bef"></a>
 
 ### windows和linux之间的编码转换问题
 
@@ -148,17 +145,17 @@ keywords: 运维
             若在windows传过去的zip包带中文字符，传到windows中会乱码，通过unzip -O utf-8 xxx.zip -d xxx解决
 
 
-<a id="orgc64d26b"></a>
+<a id="orgf6067f0"></a>
 
 # 中间件
 
 
-<a id="orgbf5efc8"></a>
+<a id="orgd41fd4d"></a>
 
 ## jdk
 
 
-<a id="org1449c6f"></a>
+<a id="org0d3ba09"></a>
 
 ### 环境变量设置
 
@@ -181,12 +178,12 @@ root用户
     chown 755 /usr/java/jdk1.8.0_311
 
 
-<a id="org3e02e4c"></a>
+<a id="org175cd1a"></a>
 
 ## tomcat
 
 
-<a id="org46fdfca"></a>
+<a id="org91bdabc"></a>
 
 ### 端口
 
@@ -204,14 +201,14 @@ root用户
     </Server>
 
 
-<a id="org5345289"></a>
+<a id="org6db98b6"></a>
 
 ### 内存参数
 
 使用$TOMCAT/bin/setenv.sh，方便迁移 或 添加至$TOMCAT/bin/catalina.sh首行
 
 
-<a id="org29b6ef0"></a>
+<a id="org738f382"></a>
 
 ### 日志($TOMCAT/logs)
 
@@ -250,7 +247,7 @@ localhost.xxxx-xx-xx.log：应用初始化未处理的异常最后被tomcat捕�
     crontab log<sub>cut</sub><sub>c</sub> && crontab -l
 
 
-<a id="org7740d2b"></a>
+<a id="orgf28d931"></a>
 
 ### 访问控制
 
@@ -272,7 +269,7 @@ localhost.xxxx-xx-xx.log：应用初始化未处理的异常最后被tomcat捕�
     chown -R user:usergp /data/logs && chmod o+x /data && chmod o+x /data/logs
 
 
-<a id="orge7b0571"></a>
+<a id="org3b9f39d"></a>
 
 ### 入侵防护
 
@@ -324,17 +321,17 @@ localhost.xxxx-xx-xx.log：应用初始化未处理的异常最后被tomcat捕�
     </error-page>
 
 
-<a id="orgfd18c62"></a>
+<a id="org8424434"></a>
 
 ## mysql
 
 
-<a id="org17ed139"></a>
+<a id="org32cd1e5"></a>
 
 ### 启动进程
 
 
-<a id="org5db31bc"></a>
+<a id="orgecd2cbd"></a>
 
 ### 启动原理
 
@@ -351,7 +348,7 @@ mysqld<sub>multi</sub>: 会读取配置文件中的[mysqld<sub>muti</sub>],[mysq
 在mysqld进程挂掉的时候，mysqld<sub>safe进程会监测到并重新</sub>
 
 
-<a id="orgd34b977"></a>
+<a id="org3010c54"></a>
 
 ### 配置文件
 
@@ -473,7 +470,7 @@ mysqld<sub>multi</sub>: 会读取配置文件中的[mysqld<sub>muti</sub>],[mysq
         default-character-set=utf8
 
 
-<a id="org4670966"></a>
+<a id="org57c8e6e"></a>
 
 ### TODO 参数详解
 
@@ -570,7 +567,7 @@ mysqld<sub>multi</sub>: 会读取配置文件中的[mysqld<sub>muti</sub>],[mysq
 5.  log<sub>bin参数</sub>
 
 
-<a id="orgceeb351"></a>
+<a id="orga0eb3b7"></a>
 
 ### mariadb简明安装
 
@@ -655,7 +652,7 @@ mysqld<sub>multi</sub>: 会读取配置文件中的[mysqld<sub>muti</sub>],[mysq
         CREATE DATABASE `test` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
-<a id="orgff535e0"></a>
+<a id="orgb1557a3"></a>
 
 ### 数据库定时备份
 
@@ -712,27 +709,27 @@ mysqld<sub>multi</sub>: 会读取配置文件中的[mysqld<sub>muti</sub>],[mysq
 3.  开启定时任务：crontab -l mariadb<sub>backup</sub><sub>cron.sh</sub>
 
 
-<a id="org47092aa"></a>
+<a id="org8355d38"></a>
 
 ### Mairadb开启SSL登录并配置证书
 
 
-<a id="org9b89520"></a>
+<a id="org7e71fe2"></a>
 
 ### 生成服务端和客户端的证书
 
 
-<a id="orgab3e111"></a>
+<a id="orgb20f99d"></a>
 
 ### 将证书路径配置到配置文件并重启服务
 
 
-<a id="orgb8ee75b"></a>
+<a id="org0185995"></a>
 
 ### 客户端使用证书连接或
 
 
-<a id="orgc7e2e87"></a>
+<a id="org33a8162"></a>
 
 ### sql查询练习题
 
@@ -846,12 +843,12 @@ SELECT COUNT(tid) FROM Teacher WHERE tname LIKE '李%';
 &#x2013; 50.查询下月过生日的学生
 
 
-<a id="orgebfbee0"></a>
+<a id="org3bd0ce3"></a>
 
 ## nginx
 
 
-<a id="org929a1bd"></a>
+<a id="org6dbeb8a"></a>
 
 ### nginx的访问部分资源：503 Service Temporarily Unavailable：
 
@@ -862,12 +859,12 @@ SELECT COUNT(tid) FROM Teacher WHERE tname LIKE '李%';
     <https://blog.csdn.net/fly_captain/article/details/84846634>
 
 
-<a id="orgecef557"></a>
+<a id="orgc3ac75d"></a>
 
 ## docker
 
 
-<a id="orgc442f7e"></a>
+<a id="orgd89ab08"></a>
 
 ### 镜像分片
 
@@ -899,22 +896,22 @@ SELECT COUNT(tid) FROM Teacher WHERE tname LIKE '李%';
     md5sum XXX-file
 
 
-<a id="orgca46a3c"></a>
+<a id="org99e1028"></a>
 
 ## nfs
 
 
-<a id="org663debe"></a>
+<a id="org48ab5a2"></a>
 
 ### 简介
 
 
-<a id="org002afff"></a>
+<a id="org136ec42"></a>
 
 ### 工作流程
 
 
-<a id="orgeea6978"></a>
+<a id="org034f0c6"></a>
 
 ### 依赖下载
 
@@ -923,7 +920,7 @@ SELECT COUNT(tid) FROM Teacher WHERE tname LIKE '李%';
 <http://www.rpmfind.net/linux/rpm2html/search.php?query=rpcbind%28x86-64%29> 
 
 
-<a id="org594a9cd"></a>
+<a id="org4af5945"></a>
 
 ### NFS配置
 
@@ -942,27 +939,27 @@ showmount -e 10.150.141.95
 3.系统数据验:在服务器上的/bwdata/upload/ 和 *home/gzdwpg* 新建文本文档，看下数据是否正常显示。
 
 
-<a id="orge248c3f"></a>
+<a id="orga5d8ea4"></a>
 
 # 实用命令
 
 
-<a id="org86dcd5c"></a>
+<a id="orgad91c99"></a>
 
 ## md5sum
 
 
-<a id="org206d9b0"></a>
+<a id="orgffb9486"></a>
 
 ### 简介
 
 
-<a id="org42efc0a"></a>
+<a id="orgb987a5b"></a>
 
 ### 命令选项
 
 
-<a id="orgb9afe13"></a>
+<a id="orge7d562a"></a>
 
 ### 生成校检码
 
@@ -976,7 +973,7 @@ showmount -e 10.150.141.95
     md5sum aaa* > checksum/aaa_all.md5
 
 
-<a id="org4944460"></a>
+<a id="orgc173d84"></a>
 
 ### 校检
 
@@ -990,7 +987,7 @@ showmount -e 10.150.141.95
 若校检文件缺失
 
 
-<a id="org5132cd7"></a>
+<a id="orga3c1274"></a>
 
 ### 总结
 
@@ -1002,22 +999,22 @@ md5校验，可能极小概率出现不同的文件生成相同的校验和，�
 基本用法与md5sum命令类似，详情可通过man sha1sum查询。
 
 
-<a id="org46579d2"></a>
+<a id="org9e20295"></a>
 
 # 其他经验
 
 
-<a id="orgff829f7"></a>
+<a id="org3fbc8d1"></a>
 
 ## 编辑yml配置文件时，记得不要用打tab，而是用空格键，否则会因为格式问题产生配置格式读取错误，要确保信息正确，格式正确
 
 
-<a id="orgf2ed7fa"></a>
+<a id="org4357f87"></a>
 
 ## 博微新配置文件的加解密（需要安装JDK和weakPassword-0.0.1.jar）
 
 
-<a id="org6b199e6"></a>
+<a id="orgad282a2"></a>
 
 ### 对明文进行加密(执行会得到密文内容)
 
@@ -1025,7 +1022,7 @@ md5校验，可能极小概率出现不同的文件生成相同的校验和，�
 2.对于指定内容字符串加密  java -jar weakPassword-0.0.1.jar -s Booway@1
 
 
-<a id="orge6b9ddc"></a>
+<a id="orgcd5821b"></a>
 
 ### 添加"-d"选项对密文解密(生成解密内容)，添加">"指定明文输出到的文件(不加打印到终端)
 
@@ -1034,12 +1031,12 @@ md5校验，可能极小概率出现不同的文件生成相同的校验和，�
 3.对于java -jar weakPassword-0.0.1.jar -f ok.txt > ok.txt -d报错，不能解密回同一个文件
 
 
-<a id="org1c0b636"></a>
+<a id="org2a0aa9c"></a>
 
 ## 文件解压缩的规范注意
 
 
-<a id="orga996139"></a>
+<a id="orgbd6e5df"></a>
 
 ### 问题：在centos解压文件： tar -xvf mysql-5.7.27-aarch64.tar.gz -C *usr/local*
 
@@ -1048,7 +1045,7 @@ md5校验，可能极小概率出现不同的文件生成相同的校验和，�
 　　    tar: Error is not recoverable: exiting now
 
 
-<a id="org38cca04"></a>
+<a id="orga24d56a"></a>
 
 ### 解决办法：
 
@@ -1057,17 +1054,17 @@ tar包压缩的时候用cvf参数，解压的时候用xvf参数
 bz 包遇到了，就把z参数换成相应j参数
 
 
-<a id="orgf056b20"></a>
+<a id="orgd9d0b4a"></a>
 
 ## Navicat运行sql文件时需要双击数据库将信息项给展开，否则“运行sql文件”是灰色的。
 
 
-<a id="orgfd73c91"></a>
+<a id="orgacfddf9"></a>
 
 ## Linux更换jar包calss文件：
 
 
-<a id="orge9c83b4"></a>
+<a id="org30c0666"></a>
 
 ### 要替换的文件在jar包的二级及以下目录下，则需要以下步骤(比如说要将：gzdwpg-biz-1.0.0.jar包中的ProjectBatchCreateServiceImpl.class替换新的class文件)：
 
@@ -1086,17 +1083,17 @@ bz 包遇到了，就把z参数换成相应j参数
         jar -uvf gzdwpg-biz-1.0.0.jar com/booway/gzdwpg/project/service/impl/ProjectBatchCreateServiceImpl.class
 
 
-<a id="orgf539c0b"></a>
+<a id="org1841a93"></a>
 
 ### jar命令参数学习：<https://www.cnblogs.com/liyanbin/p/6088458.html>
 
 
-<a id="org6e616fd"></a>
+<a id="org3c551b6"></a>
 
 ## DOP文件预览服务：
 
 
-<a id="org5ecd3ea"></a>
+<a id="org19b0d4d"></a>
 
 ## 字体问题：
 
