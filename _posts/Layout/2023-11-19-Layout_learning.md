@@ -59,16 +59,6 @@
     6.  [DOP文件预览服务：](#org3c551b6)
     7.  [字体问题：](#org19b0d4d)
 
-&#x2014;
-
-layout: post
-title: 运维工作笔记
-category: 技术
-tags: 运维
-keywords: 运维
-
-&#x2014;
-
 
 <a id="orgfeb9986"></a>
 
