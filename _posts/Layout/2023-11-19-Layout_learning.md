@@ -1,3 +1,12 @@
+---
+
+layout: post
+title: 运维工作笔记
+category: 技术
+tags: 运维
+keywords: 运维
+
+---
 
 # Table of Contents
 
